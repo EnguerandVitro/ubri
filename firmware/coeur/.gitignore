@@ -1,0 +1,3 @@
+build/
+# le .gitignore racine ignore *.c (ligne 100) : le code du microprogramme UBRI, lui, est suivi
+!*.c

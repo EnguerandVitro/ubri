@@ -1,0 +1,9 @@
+# le .gitignore racine ignore *.c (ligne 100) : tout le code C du microprogramme UBRI est suivi
+# (un « git add <dossier> » sautait les .c EN SILENCE : application incompilable sans alerte)
+!*.c
+build/
+# artefacts de compilation (contiennent la configuration complète) : jamais dans le dépôt
+*.elf
+*.hex
+*.bin
+**/zephyr/.config

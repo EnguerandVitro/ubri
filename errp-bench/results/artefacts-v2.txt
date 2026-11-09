@@ -1,0 +1,68 @@
+== DIAGNOSTICS des artefacts simulés
+  EEG de fond (écart-type par électrode, µV) : Fz 7.1 FCz 5.6 Cz 5.9 CPz 6.4 Pz 7.4 C3 4.8 C4 5.2
+  clignements : 32% des époques > 15 µV à Fz ; décile haut > 50 µV
+  sauts : 24% des époques avec un saut > 25 µV sur une seule électrode
+  muscle dès 15.0 Hz, C3 : 5.78 µV efficaces injectés, 0.04 µV après 1-10 Hz (0.01 × le fond)
+  muscle dès 10.0 Hz, C3 : 5.75 µV efficaces injectés, 0.68 µV après 1-10 Hz (0.14 × le fond)
+  muscle dès  5.0 Hz, C3 : 5.68 µV efficaces injectés, 1.16 µV après 1-10 Hz (0.24 × le fond)
+
+== ARTEFACTS RÉALISTES (simulés) sur device7 réaliste, sujet jamais vu ; test = essais après le 200e ; paramètres de nettoyage appris sur les 200 premiers SANS étiquettes
+  [propre] sujet 1 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.839 rejet 0.839 ciblé 0.839
+  [propre] sujet 2 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.768 rejet 0.783 ciblé 0.768
+  [propre] sujet 3 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.846 rejet 0.844 ciblé 0.846
+  [propre] sujet 4 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.791 rejet 0.791 ciblé 0.791
+  [propre] sujet 5 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.767 rejet 0.768 ciblé 0.769
+  [propre] sujet 6 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.675 rejet 0.674 ciblé 0.675
+  [clignements] sujet 1 :  13 clignements en calibration, projection ; AUC aucun 0.829 rejet 0.832 ciblé 0.876
+  [clignements] sujet 2 :  21 clignements en calibration, projection ; AUC aucun 0.765 rejet 0.773 ciblé 0.756
+  [clignements] sujet 3 :  21 clignements en calibration, projection ; AUC aucun 0.827 rejet 0.830 ciblé 0.833
+  [clignements] sujet 4 :  22 clignements en calibration, projection ; AUC aucun 0.788 rejet 0.797 ciblé 0.773
+  [clignements] sujet 5 :  32 clignements en calibration, projection ; AUC aucun 0.765 rejet 0.757 ciblé 0.738
+  [clignements] sujet 6 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.676 rejet 0.676 ciblé 0.676
+  [sauts] sujet 1 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.809 rejet 0.834 ciblé 0.817
+  [sauts] sujet 2 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.736 rejet 0.778 ciblé 0.753
+  [sauts] sujet 3 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.828 rejet 0.848 ciblé 0.832
+  [sauts] sujet 4 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.749 rejet 0.768 ciblé 0.753
+  [sauts] sujet 5 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.749 rejet 0.775 ciblé 0.748
+  [sauts] sujet 6 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.629 rejet 0.637 ciblé 0.630
+  [muscle] sujet 1 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.839 rejet 0.838 ciblé 0.839
+  [muscle] sujet 2 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.768 rejet 0.783 ciblé 0.768
+  [muscle] sujet 3 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.846 rejet 0.844 ciblé 0.846
+  [muscle] sujet 4 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.790 rejet 0.790 ciblé 0.790
+  [muscle] sujet 5 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.767 rejet 0.768 ciblé 0.769
+  [muscle] sujet 6 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.675 rejet 0.674 ciblé 0.675
+  [mélange] sujet 1 :   4 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.794 rejet 0.810 ciblé 0.797
+  [mélange] sujet 2 :  20 clignements en calibration, projection ; AUC aucun 0.732 rejet 0.758 ciblé 0.721
+  [mélange] sujet 3 :  18 clignements en calibration, projection ; AUC aucun 0.816 rejet 0.833 ciblé 0.814
+  [mélange] sujet 4 :  17 clignements en calibration, projection ; AUC aucun 0.727 rejet 0.767 ciblé 0.742
+  [mélange] sujet 5 :  33 clignements en calibration, projection ; AUC aucun 0.741 rejet 0.747 ciblé 0.724
+  [mélange] sujet 6 :   0 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.639 rejet 0.638 ciblé 0.648
+  [clignements liés aux erreurs (piège)] sujet 1 :  10 clignements en calibration, projection ; AUC aucun 0.878 rejet 0.865 ciblé 0.841
+  [clignements liés aux erreurs (piège)] sujet 2 :  34 clignements en calibration, projection ; AUC aucun 0.866 rejet 0.829 ciblé 0.774
+  [clignements liés aux erreurs (piège)] sujet 3 :  27 clignements en calibration, projection ; AUC aucun 0.924 rejet 0.910 ciblé 0.835
+  [clignements liés aux erreurs (piège)] sujet 4 :  34 clignements en calibration, projection ; AUC aucun 0.878 rejet 0.825 ciblé 0.742
+  [clignements liés aux erreurs (piège)] sujet 5 :  37 clignements en calibration, projection ; AUC aucun 0.862 rejet 0.800 ciblé 0.744
+  [clignements liés aux erreurs (piège)] sujet 6 :   1 clignements en calibration, PAS DE PROJECTION ; AUC aucun 0.749 rejet 0.745 ciblé 0.750
+
+  scénario                                      aucun |        rejet |        ciblé |  ciblé+rejet |       témoin | gardé (rejet)
+  propre                                 0.781 ±0.06 | 0.783 ±0.06 | 0.781 ±0.06 | 0.783 ±0.06 | 0.433 ±0.05 | 98%
+  clignements                            0.775 ±0.05 | 0.777 ±0.05 | 0.775 ±0.06 | 0.780 ±0.06 | 0.452 ±0.06 | 89%
+  sauts                                  0.750 ±0.06 | 0.774 ±0.07 | 0.755 ±0.07 | 0.764 ±0.07 | 0.444 ±0.04 | 80%
+  muscle                                 0.781 ±0.06 | 0.783 ±0.06 | 0.781 ±0.06 | 0.783 ±0.06 | 0.433 ±0.05 | 98%
+  mélange                                0.742 ±0.06 | 0.759 ±0.06 | 0.741 ±0.05 | 0.753 ±0.06 | 0.455 ±0.06 | 75%
+  clignements liés aux erreurs (piège)   0.859 ±0.05 | 0.829 ±0.05 | 0.781 ±0.04 | 0.784 ±0.04 | 0.457 ±0.05 | 85%
+
+  Par sujet, écart à « propre » (même sujet) : aucun / rejet / ciblé ; projection appliquée sur k/6
+  clignements                            aucun -0.010 -0.003 -0.019 -0.003 -0.002 +0.002 | rejet -0.007 +0.004 -0.016 +0.006 -0.010 +0.001 | ciblé +0.037 -0.012 -0.013 -0.018 -0.029 +0.002 | projection 5/6
+  sauts                                  aucun -0.030 -0.032 -0.018 -0.041 -0.019 -0.046 | rejet -0.005 +0.010 +0.002 -0.022 +0.008 -0.037 | ciblé -0.022 -0.016 -0.014 -0.038 -0.019 -0.045 | projection 0/6
+  muscle                                 aucun -0.000 -0.000 -0.000 -0.000 -0.000 -0.000 | rejet -0.001 +0.014 -0.002 -0.000 +0.001 -0.001 | ciblé -0.000 -0.000 -0.000 -0.000 +0.002 -0.000 | projection 0/6
+  mélange                                aucun -0.045 -0.037 -0.030 -0.063 -0.026 -0.036 | rejet -0.029 -0.011 -0.013 -0.024 -0.020 -0.037 | ciblé -0.042 -0.047 -0.033 -0.048 -0.043 -0.027 | projection 4/6
+  clignements liés aux erreurs (piège)   aucun +0.039 +0.098 +0.078 +0.087 +0.095 +0.074 | rejet +0.026 +0.061 +0.064 +0.035 +0.032 +0.070 | ciblé +0.002 +0.006 -0.011 -0.049 -0.024 +0.075 | projection 5/6
+
+  Détection sur le test, contre la vérité injectée :
+  propre                                 clignements : rappel   -  précision 0% (0 vrais, 1 vus) | sauts : rappel   -  précision 0% (0 vrais, 6 vus)
+  clignements                            clignements : rappel 32% précision 100% (1603 vrais, 514 vus) | sauts : rappel   -  précision 0% (0 vrais, 6 vus)
+  sauts                                  clignements : rappel   -  précision 0% (0 vrais, 11 vus) | sauts : rappel 57% précision 95% (1258 vrais, 755 vus)
+  muscle                                 clignements : rappel   -  précision 0% (0 vrais, 1 vus) | sauts : rappel   -  précision 0% (0 vrais, 6 vus)
+  mélange                                clignements : rappel 28% précision 100% (1584 vrais, 453 vus) | sauts : rappel 43% précision 94% (1229 vrais, 561 vus)
+  clignements liés aux erreurs (piège)   clignements : rappel 42% précision 100% (1647 vrais, 698 vus) | sauts : rappel   -  précision 0% (0 vrais, 4 vus)

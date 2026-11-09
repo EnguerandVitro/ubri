@@ -1,0 +1,22 @@
+/* nRF52840-DK -> carte d'évaluation TI ADS1299EEGFE (connecteur J3, guide SLAU443B tableau 8).
+ * Bus : SPI de l'en-tête Arduino du DK (arduino_spi = spi3 : SCK P1.15, MISO P1.14, MOSI P1.13, CS P1.12).
+ * Broches de contrôle choisies sur l'en-tête Arduino, à câbler vers J3 : DRDY P1.10, START P1.11, RESET P1.08.
+ * À VÉRIFIER au câblage : J3 broche 15 = DRDYB, 1 = START/CS, 8 = RESETB, 7 = CS, 11 = DIN, 13 = DOUT, 3 = CLK ;
+ * la sérigraphie de CLKSEL (J3 broche 2) serait fausse selon un résumé du forum TI : suivre le schéma.
+ * Niveaux : DVDD de la carte TI et VDD du DK sur le MÊME rail 3,0 V (fiche d'achat, A12). */
+
+&arduino_spi {
+	status = "okay";
+	cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+
+	ads1299: ads1299@0 {
+		compatible = "ubri,ads1299";
+		reg = <0>;
+		/* fiche ADS1299 : WREG/RREG octet par octet sans délai exigent tSDECODE (≈ 1,96 µs) => SCLK <= 4 MHz SANS
+		 * marge ; 2 MHz en laisse (27 octets lus en 108 µs, bien sous les 4 ms d'un échantillon). */
+		spi-max-frequency = <2000000>;
+		drdy-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+		start-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
+	};
+};

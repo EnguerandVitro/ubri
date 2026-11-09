@@ -1,0 +1,7 @@
+mne==1.13.2
+mne-bids==0.20.0
+numpy==2.5.4
+pandas==3.1.1
+pyarrow==26.0.1
+pylsl==1.18.6
+scipy==1.18.1

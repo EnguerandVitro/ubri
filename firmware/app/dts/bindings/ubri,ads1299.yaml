@@ -1,0 +1,21 @@
+# ADS1299 (TI) vu par l'application UBRI : périphérique SPI + broches de contrôle. Liaison minimale propre au
+# projet (Zephyr n'a pas de pilote ADS1299) ; le protocole est dans src/ads1299.c.
+description: "TI ADS1299, convertisseur EEG 8 voies 24 bits (application UBRI)"
+
+compatible: "ubri,ads1299"
+
+include: spi-device.yaml
+
+properties:
+  drdy-gpios:
+    type: phandle-array
+    required: true
+    description: "sortie DRDY de l'ADS1299 (active basse), une impulsion par échantillon"
+  start-gpios:
+    type: phandle-array
+    required: true
+    description: "entrée START (active haute) : lance les conversions"
+  reset-gpios:
+    type: phandle-array
+    required: true
+    description: "entrée RESET (active basse)"
