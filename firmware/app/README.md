@@ -62,6 +62,14 @@ posée**. Les compteurs de session (fronts incertains, lectures jetées, refus) 
    dit « fenêtre refermée ». Connexion d'un téléphone qui
    n'appaire pas : coupée à 30 s (chronométrer aussi un vrai appairage : la clé doit être saisie avant).
 7. Session A avec pertes forcées, déconnexion, session B propre : la clôture de B annonce **exactement** 0 abandon.
+7 bis. Commandes rapprochées. Deux écritures GATT sont séparées d'au moins un intervalle de connexion (7,5 ms, 15 ms
+   sous macOS) : ADS en marche (4 ms), l'ancien code voyait déjà « fermer » ; le cas ne se produit que fil bloqué.
+   (a) Fil DRDY débranché (attentes de 100 ms, comme l'essai 8) : « fermer » puis « ouvrir » d'affilée => clôture en
+   moins de 100 ms après « fermer », puis ouverture avec un numéro neuf. Cassure obligatoire : retirer le test de seq
+   de la boucle => la clôture n'arrive qu'au silence de 2 s (l'essai doit alors échouer).
+   (b) N « ouvrir » pendant une session => N clôtures et N ouvertures, numéros tous distincts, jamais deux sessions
+   mêlées. (c) Déconnexion juste après « ouvrir » : lu sur la CONSOLE de la carte (l'hôte déconnecté ne voit rien ;
+   console USB : AUCUNE personne équipée, KE#285), une seule ligne « session close » avec 0 abandon, aucune session après.
 8. Fil DRDY débranché en pleine session : clôture en moins de 2 s.
 9. Débit et pertes réels sur 30 min à MTU 247 : pertes annoncées = pertes comptées par l'hôte (cahier §8).
 
@@ -77,8 +85,15 @@ posée**. Les compteurs de session (fronts incertains, lectures jetées, refus) 
   scénario de 4 874 trames, avec les causes injectées. Mettre à jour `trame.py` sur le poste hôte AVANT de flasher :
   un hôte ancien jette 0x83 et voit une session non bornée.
 - Lead-off : les bits LOFF_STAT ne valent rien tant que LOFF_SENSP/N = 0 (réglage actuel).
-- La commande est un NIVEAU : « fermer » puis « ouvrir » en moins d'un échantillon peut prolonger la session sans
-  nouvelle ouverture (compteur de commandes à ajouter).
+- Commandes : chaque écriture incrémente un compteur ; toute commande reçue pendant une session la ferme, et un
+  « ouvrir » rouvre une session NEUVE (nouvelle ouverture, nouveau numéro). Un « ouvrir » en double redémarre donc la
+  session : voulu (jamais deux sessions mêlées).
+- Numéro de session (`gen`), course connue : le fil BLE compare la session d'un paquet perdu à la session courante,
+  PUIS ajoute ses pertes ; si une nouvelle ouverture (numéro + 1, remise à zéro des pertes) tombe exactement entre ces
+  deux instructions, les échantillons de CE paquet (au plus 5) sont imputés à la NOUVELLE session (KE#291). La session
+  est relue juste avant chaque imputation (après l'envoi, qui peut attendre un tampon) : fenêtre de quelques
+  instructions, et seulement si une perte radio coïncide avec une réouverture. Non provocable au banc ; pour la fermer
+  tout à fait, poster la perte avec son numéro et laisser le fil d'acquisition comparer.
 - Pas de liste d'appareils autorisés au-delà des liaisons mémorisées (`BT_MAX_PAIRED` = 2).
 - Récepteur côté hôte : `products/ubri/connect/ubri_connect/recepteur_ble.py` (bleak), testé contre un faux client
   seulement (ce serveur n'a pas de radio).

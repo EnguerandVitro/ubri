@@ -61,6 +61,9 @@ K_MSGQ_DEFINE(file_trames, sizeof(trame_t), FILE_PROFONDEUR, 4);
 static atomic_t gen_session;  /* génération de la session en cours (incrémentée à chaque ouverture) */
 static atomic_t pertes_ble;   /* échantillons de la session en cours perdus côté radio, postés par le fil BLE */
 static atomic_t commande;     /* 0 rien, 1 ouvrir, 2 fermer : écrit par BLE, lu par l'acquisition */
+static atomic_t seq_commande; /* +1 à CHAQUE commande (et à la déconnexion) : la commande est un ÉVÉNEMENT, pas un niveau.
+                               * Sans lui, « fermer » puis « ouvrir » entre deux échantillons laissait la session courir
+                               * sans nouvelle ouverture. */
 static K_SEM_DEFINE(sem_commande, 0, 1);
 static atomic_t flux_abonne;
 static atomic_t fenetre_ouverte;
@@ -84,6 +87,7 @@ static ssize_t ecrire_commande(struct bt_conn *conn, const struct bt_gatt_attr *
     uint8_t c = ((const uint8_t *)buf)[0];
     if (c != 1 && c != 2) return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
     atomic_set(&commande, c);
+    atomic_inc(&seq_commande);
     k_sem_give(&sem_commande);
     return len;
 }
@@ -173,6 +177,7 @@ static void deconnecte(struct bt_conn *conn, uint8_t raison)
     if (ancienne) bt_conn_unref(ancienne);
     (void)k_work_cancel_delayable(&travail_auth);
     atomic_set(&flux_abonne, 0);
+    atomic_inc(&seq_commande);
     atomic_set(&commande, 2); /* plus personne pour recevoir : la session se ferme (clôture perdue : l'hôte voit une
                                * session non bornée, perdus_total = None, jamais 0) */
     k_sem_give(&sem_commande);
@@ -254,6 +259,9 @@ static void fil_acquisition(void *a, void *b, void *c)
     uint8_t ads[UBRI_ADS_OCTETS];
     for (;;) {
         k_sem_take(&sem_commande, K_FOREVER);
+        /* seq lu AVANT commande : une commande arrivée après cette lecture ferme la session via seq, aucune n'est
+         * absorbée ; un « ouvrir » rouvre ensuite une session NEUVE */
+        atomic_val_t seq_ouverture = atomic_get(&seq_commande);
         if (atomic_get(&commande) != 1) continue;
         atomic_inc(&gen_session);
         (void)atomic_clear(&pertes_ble); /* pertes d'une session antérieure : jamais imputées à celle-ci (KE#291) */
@@ -265,10 +273,11 @@ static void fil_acquisition(void *a, void *b, void *c)
             memset(&s, 0, sizeof s); /* ubri_ouvrir a pu réussir : sinon UBRI_ERR_SESSION jusqu'au redémarrage */
             continue;
         }
-        if (r == 0) r = ads1299_lancer(); /* START puis RDATAC */
+        if (r == 0 && atomic_get(&seq_commande) == seq_ouverture) r = ads1299_lancer(); /* START puis RDATAC ; pas de
+                                                                         * START inutile si une commande est arrivée */
         if (r != 0) LOG_ERR("ADS1299 non démarrée (%d) : la session sera close sans échantillon", r);
         uint32_t silences = 0;
-        while (r == 0 && atomic_get(&commande) == 1) {
+        while (r == 0 && atomic_get(&commande) == 1 && atomic_get(&seq_commande) == seq_ouverture) {
             if (compteur_drdy_attendre(100) != 0) {
                 if (++silences >= SILENCE_MAX_MS / 100) {
                     LOG_ERR("aucune DRDY depuis %d ms : session close", SILENCE_MAX_MS);
@@ -324,14 +333,15 @@ static void fil_ble(void *a, void *b, void *c)
             nb_ech += en_attente.echantillon;
             attente = (k_msgq_get(&file_trames, &en_attente, K_NO_WAIT) == 0);
         }
-        bool courante = gen_paquet == (uint32_t)atomic_get(&gen_session);
+        /* la session du paquet est relue JUSTE avant chaque imputation (KE#291) : bt_gatt_notify peut attendre un tampon
+         * ATT en K_FOREVER (att.c v4.4.2), la comparer avant l'envoi élargirait la fenêtre de course à cette attente */
         if (nb == 0) { /* pas de connexion, ou MTU trop petite pour une seule trame : perdue */
-            if (en_attente.echantillon && courante) atomic_inc(&pertes_ble);
+            if (en_attente.echantillon && gen_paquet == (uint32_t)atomic_get(&gen_session)) atomic_inc(&pertes_ble);
             attente = false;
         } else if (!atomic_get(&flux_abonne) || bt_conn_get_security(conn) < BT_SECURITY_L4 ||
                    bt_gatt_notify(conn, ATTR_FLUX_VALEUR, paquet, (uint16_t)remplissage) != 0) {
             /* deux barrières indépendantes : abonnement (CCC en AUTHEN) ET niveau de la liaison relu ici */
-            if (courante) atomic_add(&pertes_ble, (atomic_val_t)nb_ech);
+            if (gen_paquet == (uint32_t)atomic_get(&gen_session)) atomic_add(&pertes_ble, (atomic_val_t)nb_ech);
         }
         if (conn) bt_conn_unref(conn);
     }
